@@ -22,12 +22,12 @@ class ForecastProvider {
     hourlyForecast.clear();
 
     // latitude and longitude of Schloß Johannisburg in Aschaffenburg
-    var lat = 49.97606;
-    var lon = 9.14163;
+    // var lat = 49.97606;
+    // var lon = 9.14163;
 
     // latitude and longitude for Sydney
-    // var lat = -33.86785;
-    // var lon = 151.20732;
+    var lat = -33.86785;
+    var lon = 151.20732;
 
     // 'https://api.open-meteo.com/v1/forecast?latitude=49.97606&longitude=9.14163&hourly=temperature_2m,precipitation,cloud_cover&forecast_days=1';
     final url =
@@ -55,16 +55,19 @@ class ForecastProvider {
 
     var timezoneName = latLngToTimezoneString(lat, lon);
     final tzLocation = tz.getLocation(timezoneName);
+    final utcNow = DateTime.now().toUtc();
 
     for (int i = 0; i < times.length; i++) {
       final timeInUtc = DateTime.parse('${times[i]}Z');
       print(timeInUtc.isUtc);
-      final localTime = tz.TZDateTime.from(timeInUtc, tzLocation);
-      var data = WeatherData(localTime);
-      data.temp = temps[i];
-      data.precipAmount = precipAmounts[i];
-      data.cloudCover = cloudCovers[i];
-      hourlyForecast.add(data);
+      if (timeInUtc.isAfter(utcNow)) {
+        final localTime = tz.TZDateTime.from(timeInUtc, tzLocation);
+        var data = WeatherData(localTime);
+        data.temp = temps[i];
+        data.precipAmount = precipAmounts[i];
+        data.cloudCover = cloudCovers[i];
+        hourlyForecast.add(data);
+      }
     }
     return true;
   }
