@@ -57,7 +57,8 @@ class ForecastProvider {
     final tzLocation = tz.getLocation(timezoneName);
 
     for (int i = 0; i < times.length; i++) {
-      final timeInUtc = DateTime.parse(times[i]);
+      final timeInUtc = DateTime.parse('${times[i]}Z');
+      print(timeInUtc.isUtc);
       final localTime = tz.TZDateTime.from(timeInUtc, tzLocation);
       var data = WeatherData(localTime);
       data.temp = temps[i];
