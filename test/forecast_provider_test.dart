@@ -36,5 +36,6 @@ void main() {
           aschaffenburgLocalTime.microsecondsSinceEpoch,
       true,
     );
+    expect(sydneyLocalTime.isAtSameMomentAs(aschaffenburgLocalTime), true);
   });
 }
