@@ -38,4 +38,19 @@ void main() {
     );
     expect(sydneyLocalTime.isAtSameMomentAs(aschaffenburgLocalTime), true);
   });
+
+  test('enforce API error', () async {
+    var locationProvider = LocationProvider();
+    var forecastProvider = ForecastProvider(locationProvider);
+
+    var succeeded = await forecastProvider.fetchHourlyForecast();
+    expect(succeeded, true);
+    expect(forecastProvider.hourlyForecast.isNotEmpty, true);
+
+    succeeded = locationProvider.selectLocation("invalid");
+    expect(succeeded, true);
+    succeeded = await forecastProvider.fetchHourlyForecast();
+    expect(succeeded, false);
+    expect(forecastProvider.hourlyForecast.length, 0);
+  });
 }
